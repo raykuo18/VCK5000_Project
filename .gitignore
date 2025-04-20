@@ -1,8 +1,10 @@
 **/.Xil
 **/Work
+/aie_overlay/Work_*
 **/_x
 **/.ipcache
 /aie_overlay/data/*.txt
+**.npy
 **.log
 **.db
 /.vscode
@@ -32,7 +34,6 @@
 /krnl_jpeg/krnl_jpeg_test
 /aie_overlay/.AIE_SIM_CMD_LINE_OPTIONS
 /aie_overlay/ISS_RPC_SERVER_PORT
-/aie_overlay/pl_sample_count_in
-/aie_overlay/pl_sample_count_out
+/aie_overlay/pl_sample_count*
 /aie_overlay/aiesimulator_output
-
+/aie_overlay/.nfs*
