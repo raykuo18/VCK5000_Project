@@ -27,14 +27,14 @@ clean:
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #Compile AIE code
-aie_compile: libadf.a
+aie_compile: libadf_$(kernel).a
 
-libadf.a: src/*
+libadf_$(kernel).a: src/*
 	@echo "INFO:- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
 	@echo "INFO:Running aiecompiler for hw..."
-	@rm -rf Work libadf.a
-	@mkdir -p Work
-	@aiecompiler --target=hw --platform $(PLATFORM) --include="src" --include="../common" --workdir=./Work src/graph.cpp
+	@rm -rf Work_$(kernel) libadf_$(kernel).a
+	@mkdir -p Work_$(kernel)
+	@aiecompiler --target=hw --platform $(PLATFORM) --include="src" --include="../common" --workdir=./Work_$(kernel) src/graph.cpp
 
 aie_compile_x86: 
 	@echo "INFO:- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
@@ -48,7 +48,7 @@ aie_compile_x86:
 aie_simulate:
 	@echo "INFO:- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
 	@echo "INFO:Running aiesimulator..."
-	@aiesimulator --pkg-dir=./Work --profile
+	@aiesimulator --pkg-dir=./Work_$(kernel) --profile
 
 aie_simulate_x86:
 	@echo "INFO:- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
