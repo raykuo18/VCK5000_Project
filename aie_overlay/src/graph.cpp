@@ -18,12 +18,16 @@
 
 using namespace adf;
 
-graph_overlay my_graph;
+// graph_overlay my_graph;
+graph_matmul_4x4x4 my_graph_matmul_4x4x4;
+// graph_matmul_64_64_64_int8 my_graph_matmul_64_64_64_int8;
+
+#define MY_GRAPH my_graph_matmul_4x4x4
 
 int main(int argc, char ** argv)
 {
-	my_graph.init();
-	my_graph.run();
-	my_graph.end();
+	MY_GRAPH.init();
+	MY_GRAPH.run(1);
+	MY_GRAPH.end();
 	return 0;
 }
