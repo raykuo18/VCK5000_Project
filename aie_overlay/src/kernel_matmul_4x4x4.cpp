@@ -1,6 +1,6 @@
 #include <aie_api/aie.hpp>
 
-__attribute__((noinline)) void kernel_matmul(
+__attribute__((noinline)) void kernel_matmul_4x4x4(
     input_window_int16* __restrict in_win,
     output_window_int16* __restrict out_win) {
 
