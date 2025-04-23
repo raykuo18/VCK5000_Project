@@ -19,7 +19,10 @@
 #include "kernel_overlay.h"
 #include "kernel_cvt.h"
 #include "kernel_matmul_4x4x4.h"
+#include "kernel_matmul_4x4x4_int16_stream.h"
 #include "kernel_matmul_64x64x64_int8.h"
+#include "kernel_matmul_4x16x8_int8.h"
+#include "kernel_matmul_8x16x8_int8.h"
 
 using namespace adf;
 
@@ -101,7 +104,7 @@ public:
 
 };
 
-class graph_matmul_64_64_64_int8 : public graph {
+class graph_matmul_4x4x4_int16_stream : public graph {
 private:
     kernel k_matmul;
 
@@ -109,7 +112,36 @@ public:
     input_plio in;
     output_plio out;
 
-    graph_matmul_64_64_64_int8() {
+    graph_matmul_4x4x4_int16_stream() {
+        // Create kernel
+        k_matmul = kernel::create(kernel_matmul_4x4x4_int16_stream);
+
+        // Create PLIO ports (must assign to class members!)
+        in = input_plio::create("in0", plio_32_bits, "data/input_4x4x4_stream.txt");
+        out = output_plio::create("out0", plio_32_bits, "data/output_4x4x4_stream.txt");
+
+        // Connect PLIOs to the kernel
+        connect<>(in.out[0], k_matmul.in[0]);
+        connect<>(k_matmul.out[0], out.in[0]);
+
+        // Set kernel files
+        source(k_matmul)  = "src/kernel_matmul_4x4x4_int16_stream.cpp";
+        headers(k_matmul) = { "src/kernel_matmul_4x4x4_int16_stream.h" };
+
+        // Set execution ratio
+        runtime<ratio>(k_matmul) = 0.9;
+    }
+};
+
+class graph_matmul_64x64x64_int8 : public graph {
+private:
+    kernel k_matmul;
+
+public:
+    input_plio in;
+    output_plio out;
+
+    graph_matmul_64x64x64_int8() {
         // Create kernel
         k_matmul = kernel::create(kernel_matmul_64x64x64_int8);
 
@@ -130,3 +162,60 @@ public:
     }
 };
 
+class graph_matmul_4x16x8_int8 : public graph {
+private:
+    kernel k_matmul;
+
+public:
+    input_plio in;
+    output_plio out;
+
+    graph_matmul_4x16x8_int8() {
+        // Create kernel
+        k_matmul = kernel::create(kernel_matmul_4x16x8_int8);
+
+        // Create PLIO ports (128 bits = 16 bytes = 16 int8s per line)
+        in = input_plio::create("in", plio_128_bits, "data/input_random_4x16x8.txt");
+        out = output_plio::create("out", plio_128_bits, "data/output_random_4x16x8.txt");
+
+        // Connect PLIOs to kernel
+        connect<window<192>>(in.out[0], k_matmul.in[0]);    // 64x64x2 int8 = 8192 bytes
+        connect<window<32>>(k_matmul.out[0], out.in[0]);   // 64x64 int8 = 4096 bytes
+
+        // Register source and header files
+        source(k_matmul) = "src/kernel_matmul_4x16x8_int8.cpp";
+        headers(k_matmul) = {"src/kernel_matmul_4x16x8_int8.h"};
+
+        // Performance estimation
+        runtime<ratio>(k_matmul) = 0.9;
+    }
+};
+
+class graph_matmul_8x16x8_int8 : public graph {
+private:
+    kernel k_matmul;
+
+public:
+    input_plio in;
+    output_plio out;
+
+    graph_matmul_8x16x8_int8() {
+        // Create kernel
+        k_matmul = kernel::create(kernel_matmul_8x16x8_int8);
+
+        // Create PLIO ports (128 bits = 16 bytes = 16 int8s per line)
+        in = input_plio::create("in", plio_128_bits, "data/input_random_8x16x8.txt");
+        out = output_plio::create("out", plio_128_bits, "data/output_random_8x16x8.txt");
+
+        // Connect PLIOs to kernel
+        connect<window<256>>(in.out[0], k_matmul.in[0]);    // 64x64x2 int8 = 8192 bytes
+        connect<window<64>>(k_matmul.out[0], out.in[0]);   // 64x64 int8 = 4096 bytes
+
+        // Register source and header files
+        source(k_matmul) = "src/kernel_matmul_8x16x8_int8.cpp";
+        headers(k_matmul) = {"src/kernel_matmul_8x16x8_int8.h"};
+
+        // Performance estimation
+        runtime<ratio>(k_matmul) = 0.9;
+    }
+};

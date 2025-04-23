@@ -20,9 +20,12 @@ using namespace adf;
 
 // graph_overlay my_graph;
 // graph_matmul_4x4x4 my_graph_matmul_4x4x4;
-graph_matmul_64_64_64_int8 my_graph_matmul_64_64_64_int8;
+graph_matmul_4x4x4_int16_stream my_graph_matmul_4x4x4_int16_stream;
+// graph_matmul_64x64x64_int8 my_graph_matmul_64x64x64_int8;
+// graph_matmul_4x16x8_int8 my_graph_matmul_4x16x8_int8;
+// graph_matmul_8x16x8_int8 my_graph_matmul_8x16x8_int8;
 
-#define MY_GRAPH my_graph_matmul_64_64_64_int8
+#define MY_GRAPH my_graph_matmul_4x4x4_int16_stream
 
 int main(int argc, char ** argv)
 {
