@@ -34,7 +34,7 @@ libadf_$(kernel).a: src/*
 	@echo "INFO:Running aiecompiler for hw..."
 	@rm -rf Work_$(kernel) libadf_$(kernel).a
 	@mkdir -p Work_$(kernel)
-	@aiecompiler --target=hw --platform $(PLATFORM) --include="src" --include="../common" --workdir=./Work_$(kernel) src/graph.cpp
+	@aiecompiler --target=hw --platform $(PLATFORM) --include="src" --include="../common" --workdir=./Work_$(kernel) --output-archive=libadf_$(kernel).a src/graph.cpp
 
 aie_compile_x86: 
 	@echo "INFO:- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
