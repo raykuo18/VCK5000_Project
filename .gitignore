@@ -37,3 +37,4 @@
 /aie_overlay/pl_sample_count*
 /aie_overlay/aiesimulator_output
 /aie_overlay/.nfs*
+/aie_overlay/temp
