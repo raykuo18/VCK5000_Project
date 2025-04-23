@@ -36,7 +36,14 @@ def extract_sim_time(path):
         start_val, start_unit = int(t_start.split()[1]), t_start.split()[2]
         end_val, end_unit = int(t_end.split()[1]), t_end.split()[2]
 
-        assert start_unit == end_unit
+        # assert start_unit == end_unit
+        if start_unit == 'ns':
+            start_val *= 1000
+            start_unit = 'ps'
+        if end_unit == 'ns':
+            end_val *= 1000
+            end_unit = 'ps'
+        
         return end_val - start_val, start_unit
 
 def main():
