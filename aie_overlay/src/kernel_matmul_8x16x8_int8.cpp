@@ -102,21 +102,11 @@ void kernel_matmul_8x16x8_int8(
     output_window<int8>* __restrict out_win) {
     
     // aie::vector<int8, 128> a_vec;
-    aie::vector<int8, 128> b_vec;
-    aie::vector<int8, 64> a_tile_1;
-    aie::vector<int8, 64> a_tile_2;
+    // aie::vector<int8, 128> b_vec;
+    aie::vector<int8, 64> a_tile;
+    aie::vector<int8, 128> b_tile;
     aie::vector<int8, 32> c_vec;
 
-    // Read A and B
-    for (int i = 0; i < 64; ++i)
-        a_tile_1[i] = window_readincr(in_win);
-    for (int i = 0; i < 64; ++i)
-        a_tile_2[i] = window_readincr(in_win);
-    for (int i = 0; i < 128; ++i)
-        b_vec[i] = window_readincr(in_win);
-
-    // Matmul
-    aie::mmul<4, 16, 8, int8, int8> m;
     // first tile
     m.mul(a_tile_1, b_vec);
     c_vec = m.to_vector<int8>(0);

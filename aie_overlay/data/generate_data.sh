@@ -1,7 +1,7 @@
 python generate_test_data.py \
   --type int8 \
   --per-line 16 \
-  --M 64 --K 64 --N 64 \
-  --mode identity \
-  --input input_identity_64x64x64.txt \
-  --output output_identity_64x64x64.npy
+  --M 4 --K 16 --N 16 \
+  --mode random \
+  --input input_random_4x16x16.txt \
+  --output output_random_4x16x16.npy

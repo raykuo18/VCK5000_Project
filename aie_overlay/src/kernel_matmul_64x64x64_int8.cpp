@@ -57,7 +57,6 @@ void kernel_matmul_64x64x64_int8(
 
         // Rewind back to start of A using bottom-right index
         window_decr(in_win, M * K + (k + TK - 1) * N + j + TN - 1);
-        
 
         // -----------------------------
         // Multiply-accumulate
@@ -72,11 +71,19 @@ void kernel_matmul_64x64x64_int8(
       // Write C tile
       // -----------------------------
       aie::vector<int8, TILE_C> c_tile = acc.to_vector<int8>(0);
+
+      // Move to the start of tile C[i, j] in output
+      window_incr(out_win, i * N + j);
+
       for (int ii = 0; ii < TM; ++ii) {
         for (int jj = 0; jj < TN; ++jj) {
           window_writeincr(out_win, c_tile[ii * TN + jj]);
         }
+        if (ii != TM - 1 && N > TN) window_incr(out_win, N - TN);  // skip rest of the row
       }
+
+      // Rewind to start of tile
+      window_decr(out_win, TM * TN + (TM - 1) * (N - TN) + i * N + j);
     }
   }
 } // Explanation:
@@ -84,5 +91,4 @@ void kernel_matmul_64x64x64_int8(
   // - The pointer is initially at the start of A
   // - We move to A[i,k] and rewind after tile use
   // - Then we move to B[k,j] and rewind after tile use
-  // - Skipping K-TK or N-TN only on non-final tile rows keeps pointer at tile end
-  // - Rewinds now use tile bottom-right element index for clarity
+  // - Output now correctly written to C[i,j] by navigating and rewinding the output window
