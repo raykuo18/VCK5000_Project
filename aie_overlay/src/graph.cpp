@@ -32,7 +32,7 @@ graph_matmul_4x4x4_controlled my_graph_matmul_4x4x4_controlled;
 int main(int argc, char ** argv)
 {
 	MY_GRAPH.init();
-	MY_GRAPH.run(1);
+	MY_GRAPH.run(2);
 	MY_GRAPH.end();
 	return 0;
 }

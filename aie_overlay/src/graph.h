@@ -112,6 +112,7 @@ private:
     kernel k_matmul;
 
 public:
+    input_plio ctl;
     input_plio in;
     output_plio out;
 
@@ -121,11 +122,13 @@ public:
         k_matmul = kernel::create(kernel_matmul_4x4x4_controlled);
 
 		// create port
+        ctl  = input_plio::create("ctl", plio_32_bits, "data/input_4x4x4_ctl.txt");
         in = input_plio::create("in", plio_32_bits, "data/input_4x4x4.txt");
         out = output_plio::create("out", plio_32_bits, "data/output_4x4x4_controlled.txt");
 
 		// connect port and kernel
-        connect<window<64>>(in.out[0], k_matmul.in[0]);
+        connect<window<4>>(ctl.out[0], k_matmul.in[0]);       // 1 int32 = 4 bytes (automatically round from 4 to 16 during compilation)
+        connect<window<64>>(in.out[0], k_matmul.in[1]);
         connect<window<32>>(k_matmul.out[0], out.in[0]);
 
 		// set kernel source codes
