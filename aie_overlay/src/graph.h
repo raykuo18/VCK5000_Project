@@ -128,7 +128,7 @@ public:
 
 		// connect port and kernel
         connect<window<4>>(ctl.out[0], k_matmul.in[0]);       // 1 int32 = 4 bytes (automatically round from 4 to 16 during compilation)
-        connect<window<64>>(in.out[0], k_matmul.in[1]);
+        connect<window<32>>(in.out[0], k_matmul.in[1]);
         connect<window<32>>(k_matmul.out[0], out.in[0]);
 
 		// set kernel source codes
