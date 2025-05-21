@@ -25,9 +25,10 @@ using namespace adf;
 // graph_matmul_4x16x8_int8 my_graph_matmul_4x16x8_int8;
 // graph_matmul_8x16x8_int8 my_graph_matmul_8x16x8_int8;
 // graph_matmul_8x32x16_int8 my_graph_matmul_8x32x16_int8;
-graph_matmul_4x4x4_controlled my_graph_matmul_4x4x4_controlled;
+// graph_matmul_4x4x4_controlled my_graph_matmul_4x4x4_controlled;
+graph_matmul_4x2x4_float_controlled my_graph_matmul_4x2x4_float_controlled;
 
-#define MY_GRAPH my_graph_matmul_4x4x4_controlled
+#define MY_GRAPH my_graph_matmul_4x2x4_float_controlled
 
 int main(int argc, char ** argv)
 {

@@ -24,6 +24,7 @@
 #include "kernel_matmul_4x16x8_int8.h"
 #include "kernel_matmul_8x16x8_int8.h"
 #include "kernel_matmul_4x4x4_controlled.h"
+#include "kernel_matmul_4x2x4_float_controlled.h"
 
 using namespace adf;
 
@@ -134,6 +135,43 @@ public:
 		// set kernel source codes
 		source(k_matmul)     	= "src/kernel_matmul_4x4x4_controlled.cpp";
 		headers(k_matmul) 	  	= {"src/kernel_matmul_4x4x4_controlled.h"};
+
+		// set ratio
+		runtime<ratio>(k_matmul)    =0.9;
+
+	};
+
+};
+
+class graph_matmul_4x2x4_float_controlled: public graph
+{
+
+private:
+    kernel k_matmul;
+
+public:
+    input_plio ctl;
+    input_plio in;
+    output_plio out;
+
+	graph_matmul_4x2x4_float_controlled()
+	{
+		// create kernel
+        k_matmul = kernel::create(kernel_matmul_4x2x4_float_controlled);
+
+		// create port
+        ctl  = input_plio::create("ctl", plio_32_bits, "data/input_4x2x4_float_ctl.txt");
+        in = input_plio::create("in", plio_32_bits, "data/input_4x2x4_float.txt");
+        out = output_plio::create("out", plio_32_bits, "data/output_4x2x4_float_controlled.txt");
+
+		// connect port and kernel
+        connect<window<4>>(ctl.out[0], k_matmul.in[0]);       // 1 int32 = 4 bytes (automatically round from 4 to 16 during compilation)
+        connect<window<32>>(in.out[0], k_matmul.in[1]);
+        connect<window<64>>(k_matmul.out[0], out.in[0]);
+
+		// set kernel source codes
+		source(k_matmul)     	= "src/kernel_matmul_4x2x4_float_controlled.cpp";
+		headers(k_matmul) 	  	= {"src/kernel_matmul_4x2x4_float_controlled.h"};
 
 		// set ratio
 		runtime<ratio>(k_matmul)    =0.9;
